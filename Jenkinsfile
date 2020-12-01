@@ -1,11 +1,16 @@
 pipeline {
     agent {
-        docker {
-            label 'macos'
-            image 'maven:3.6.3'
-            args '-v $HOME/apache-maven-3.6.3'
+        node {
+              label 'macos'
+              customWorkspace "pipelineWorkspace"
         }
     }
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "maven3.6.3"
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -26,7 +31,7 @@ pipeline {
         }
         stage('Deliver') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
+                sh './jenkins/scripts/build.sh'
             }
         }
     }
